@@ -56,8 +56,25 @@
 
     selected: function (event) {
       if (this.model.get('isEnabled')) {
-        var isoCode = $(event.target).data("isocode");
-        var btnLabel = isoCode.substring(0, 2).toUpperCase();
+							var isoCode = $(event.target).data("isocode");
+
+							//Fix for issue 232341. The begining.
+
+							var res = this.$el.find('*[' + "data-isocode" + ']');
+
+							var result = "";
+							for (var i = 0; i < res.length; i++) {
+								if (res[i].dataset.isocode === isoCode) {
+									result = res[i].text;
+									break;
+								}
+							}
+
+        //var btnLabel = isoCode.substring(0, 2).toUpperCase();
+							var btnLabel = result;
+
+							//Fix for issue 232341. The end.
+
         if (isoCode == "sc-report-language-all") {
           btnLabel = _sc.Resources.Dictionary.translate("All").toUpperCase();
         }
@@ -109,8 +126,24 @@
         this.model.set("selectedReportLanguage", language);
       }
 
-      this.model.set("selectedLanguage", language);
-      this.children.DropDownButton.set('text', language.substring(0, 2).toUpperCase());
+						this.model.set("selectedLanguage", language);
+
+						// fix for issue 232341. The begining.
+
+						var res = this.$el.find('*[' + "data-isocode" + ']');
+
+						var result = "";
+						for (var i = 0; i < res.length; i++) {
+							if (res[i].dataset.isocode === language) {
+								result = res[i].text;
+								break;
+							}
+						}
+
+      //this.children.DropDownButton.set('text', language.substring(0, 2).toUpperCase());
+						this.children.DropDownButton.set('text', result);
+
+						// fix for issue 232341. The end.
 
       this.$el.find("a.language-item").removeClass("isdefault");
       this.$el.find("a.language-item[data-isocode=" + this.model.get("selectedLanguage") + "]").addClass("isdefault");
